@@ -3,7 +3,7 @@
 ## Workshop Curriculum:
 
 ### 1. Beginner
-**Agent Name**: Conflict Detection Agent. 
+**Agent Name**: Hate Speech Detection Agent. 
   
 **Learning Objectives**:
 - Learn to build a simple single agent system with CrewAI.
