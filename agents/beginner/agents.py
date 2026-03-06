@@ -10,9 +10,6 @@ llm = LLM(
     model="openai/gpt-4o",
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
-    temperature=0.7,
-    max_tokens=4000,
-    timeout=120,
 )
 
 # Define your agent with OpenAI LLM
@@ -21,7 +18,7 @@ hate_speech_detector = Agent(
     goal="Analyse the text and identify if any hate speech / offensive language is present",
     llm=llm,
     backstory=(
-        "You are a Hate Speech Detector who understands details very well and expert negotiator. \
-         You can identify hate speech / offensive language in given text"
+        "You are a Hate Speech Detector for Twitter who understands details very well and expert negotiator. \
+         You can identify hate speech / offensive language in given tweet."
     ),
 )
