@@ -9,7 +9,8 @@ os.makedirs("task_outputs", exist_ok=True)
 
 # Task to gather financial data of a stock
 get_company_financials = Task(
-    description="Get financial data like income statements and other fundamental ratios for stock: {stock}",
+    description="Get financial data like income statements and other fundamental ratios for stock: {stock}. \
+    Use the year 2026 as the current year.",
     expected_output="Detailed information from income statement, key ratios for {stock}. "
     "Indicate also about current financial status and trend over the period.",
     agent=data_explorer,
@@ -17,7 +18,8 @@ get_company_financials = Task(
 
 # Task to gather company news
 get_company_news = Task(
-    description="Get latest news and business information about company: {stock}",
+    description="Get latest news and business information about company: {stock}. \
+    Use the year 2026 as the current year.",
     expected_output="Latest news and business information about the company. Provide a summary also.",
     agent=news_info_explorer,
 )

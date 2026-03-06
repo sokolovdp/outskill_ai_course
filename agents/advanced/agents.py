@@ -3,8 +3,13 @@ import os
 from crewai import Agent
 from crewai.llm import LLM
 from dotenv import load_dotenv
-from tools import (exa_search_tool, get_company_info, get_current_stock_price,
-                   get_income_statements)
+
+from tools import (
+    exa_search_tool,
+    get_company_info,
+    get_current_stock_price,
+    get_income_statements,
+)
 
 load_dotenv()
 
@@ -12,10 +17,8 @@ llm = LLM(
     model="openai/gpt-4.1-2025-04-14",
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
-    temperature=0.7,
-    max_tokens=4000,
-    timeout=120,  # 2 minutes timeout
 )
+
 # Agent for gathering company news and information
 news_info_explorer = Agent(
     role="News and Info Researcher",
@@ -28,9 +31,8 @@ news_info_explorer = Agent(
     tools=[exa_search_tool],
     cache=True,
     max_iter=5,
-    max_rpm=15,  # Rate limiting: max 15 requests per minute
-    memory=True,  # Enable memory for learning from previous searches
     max_execution_time=600,  # 10 minutes max execution time
+    max_rpm=15,  # Rate limiting: max 15 requests per minute
     respect_context_window=True,  # Respect model's context window
 )
 
@@ -47,9 +49,8 @@ data_explorer = Agent(
     tools=[get_company_info, get_income_statements],
     cache=True,
     max_iter=5,
-    max_rpm=12,  # Rate limiting: max 12 requests per minute
-    memory=True,  # Enable memory for learning from previous data searches
     max_execution_time=450,  # 7.5 minutes max execution time
+    max_rpm=12,  # Rate limiting: max 12 requests per minute
     respect_context_window=True,  # Respect model's context window
 )
 
@@ -64,9 +65,8 @@ analyst = Agent(
         "making a comprehensive analysis. Use Indian units for numbers (lakh, crore)."
     ),
     max_iter=4,
-    max_rpm=10,  # Rate limiting: max 10 requests per minute
-    memory=True,  # Enable memory for learning from previous analyses
     max_execution_time=300,  # 5 minutes max execution time
+    max_rpm=10,  # Rate limiting: max 10 requests per minute
     respect_context_window=True,  # Respect model's context window
 )
 
@@ -74,18 +74,17 @@ analyst = Agent(
 fin_expert = Agent(
     role="Financial Expert",
     goal="Considering financial analysis of a stock, make investment recommendations",
-    llm=llm,
-    verbose=True,
-    tools=[get_current_stock_price],
-    max_iter=5,
-    max_rpm=8,  # Conservative rate limit for recommendation generation
-    memory=True,  # Remember successful recommendations for similar stocks
-    max_execution_time=360,  # 6 minutes max execution time
-    respect_context_window=True,  # Respect model's context window
     backstory=(
         "You are an expert financial advisor who can provide investment recommendations. "
         "Consider the financial analysis, current information about the company, current stock price, "
         "and make recommendations about whether to buy/hold/sell a stock along with reasons."
         'When using tools, try with and without the suffix ".NS" to the stock symbol and see what works.'
     ),
+    llm=llm,
+    verbose=True,
+    tools=[get_current_stock_price],
+    max_iter=5,
+    max_execution_time=360,  # 6 minutes max execution time
+    max_rpm=8,  # Conservative rate limit for recommendation generation
+    respect_context_window=True,  # Respect model's context window
 )

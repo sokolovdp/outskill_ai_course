@@ -4,10 +4,17 @@ from typing import Dict, Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from main import (analysis_crew, financial_crew, news_crew, run_crew_task,
-                  run_parallel_execution, run_sequential_execution,
-                  sequential_crew)
 from pydantic import BaseModel
+
+from main import (
+    analysis_crew,
+    financial_crew,
+    news_crew,
+    run_crew_task,
+    run_parallel_execution,
+    run_sequential_execution,
+    sequential_crew,
+)
 
 # FastAPI app initialization
 app = FastAPI(
