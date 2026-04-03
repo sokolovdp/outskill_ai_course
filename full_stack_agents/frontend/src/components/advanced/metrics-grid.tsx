@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
 
 interface MetricsGridProps {
   data: Record<string, string>
@@ -9,7 +8,7 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 },
+    transition: { staggerChildren: 0.04 },
   },
 }
 
@@ -23,19 +22,21 @@ export function MetricsGrid({ data }: MetricsGridProps) {
 
   return (
     <motion.div
-      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
+      className="grid grid-cols-2 gap-2.5 md:grid-cols-3 lg:grid-cols-4"
       variants={container}
       initial="hidden"
       animate="show"
     >
       {entries.map(([label, value]) => (
-        <motion.div key={label} variants={item}>
-          <Card>
-            <CardContent className="p-4">
-              <p className="text-xs text-muted-foreground uppercase">{label}</p>
-              <p className="text-lg font-semibold mt-1">{value}</p>
-            </CardContent>
-          </Card>
+        <motion.div
+          key={label}
+          variants={item}
+          className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-primary/60">
+            {label}
+          </p>
+          <p className="mt-1 text-sm font-bold">{value}</p>
         </motion.div>
       ))}
     </motion.div>
