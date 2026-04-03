@@ -57,7 +57,7 @@ export function ResultVerdict({ result }: ResultVerdictProps) {
         </CardContent>
       </Card>
 
-      <AgentCard agentInfo={result.agent_info} />
+      {result.agent_info && <AgentCard agentInfo={result.agent_info} />}
     </motion.div>
   )
 }
