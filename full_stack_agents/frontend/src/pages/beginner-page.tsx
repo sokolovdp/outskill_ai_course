@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Shield } from 'lucide-react'
 import { useAppStore } from '@/store/app-store'
 import { useBeginnerExamples, useAnalyzeText } from '@/hooks/use-beginner'
 import { DemoBadge } from '@/components/shared/demo-badge'
@@ -10,10 +11,10 @@ export function BeginnerPage() {
   const { demoMode } = useAppStore()
   const { data: examples } = useBeginnerExamples()
   const { mutateAsync, data: result, isPending } = useAnalyzeText()
-  const [, setText] = useState('')
+  const [inputText, setInputText] = useState('')
 
   const handleChipSelect = (text: string) => {
-    setText(text)
+    setInputText(text)
     mutateAsync({ text, demo: demoMode })
   }
 
@@ -22,20 +23,36 @@ export function BeginnerPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div className="flex items-center gap-3">
-        <h2 className="text-2xl font-bold">Content Shield</h2>
-        <DemoBadge />
+    <div className="mx-auto max-w-3xl space-y-8">
+      <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+            <Shield className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold">Content Shield</h2>
+              <DemoBadge />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Single-agent hate speech detection powered by CrewAI
+            </p>
+          </div>
+        </div>
       </div>
-      <p className="text-muted-foreground">
-        Single-agent hate speech detection powered by CrewAI. Analyze text content for harmful language.
-      </p>
 
-      <TextAnalyzer onAnalyze={handleAnalyze} isLoading={isPending} />
+      <TextAnalyzer
+        onAnalyze={handleAnalyze}
+        isLoading={isPending}
+        value={inputText}
+        onValueChange={setInputText}
+      />
 
       {examples && examples.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">Try an example:</p>
+        <div className="space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Try an example
+          </p>
           <ExampleChips examples={examples} onSelect={handleChipSelect} />
         </div>
       )}
