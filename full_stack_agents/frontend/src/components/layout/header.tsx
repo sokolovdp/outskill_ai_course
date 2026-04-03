@@ -16,16 +16,23 @@ export function Header() {
   const title = pageTitles[pathname] ?? 'Agent Studio'
 
   return (
-    <header className="flex items-center justify-between border-b border-border p-4">
-      <h1 className="text-lg font-semibold">{title}</h1>
-      <div className="flex items-center gap-3">
-        <label className="text-sm text-muted-foreground">Demo Mode</label>
-        <Switch checked={demoMode} onCheckedChange={toggleDemoMode} />
-        {demoMode && (
-          <Badge variant="outline" className="text-amber-400 border-amber-400/50">
-            DEMO
-          </Badge>
-        )}
+    <header className="sticky top-0 z-10 glass border-b border-white/[0.06] px-6 py-3">
+      <div className="flex items-center justify-between">
+        <h1 className="text-sm font-semibold tracking-wide text-foreground/70 uppercase">
+          {title}
+        </h1>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">Demo Mode</span>
+          <Switch checked={demoMode} onCheckedChange={toggleDemoMode} />
+          {demoMode && (
+            <Badge
+              variant="outline"
+              className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-[10px] font-semibold tracking-wider"
+            >
+              DEMO
+            </Badge>
+          )}
+        </div>
       </div>
     </header>
   )
