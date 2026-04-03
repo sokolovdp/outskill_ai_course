@@ -22,9 +22,13 @@ export function StockSearch({ onSearch, isLoading }: StockSearchProps) {
         value={stock}
         onChange={(e) => setStock(e.target.value.toUpperCase())}
         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        className="flex-1"
+        className="flex-1 border-white/[0.08] bg-white/[0.03] placeholder:text-muted-foreground/50"
       />
-      <Button onClick={handleSearch} disabled={!stock.trim() || isLoading}>
+      <Button
+        onClick={handleSearch}
+        disabled={!stock.trim() || isLoading}
+        className="min-w-[130px]"
+      >
         {isLoading ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
