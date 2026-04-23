@@ -48,7 +48,7 @@ Learn to more usecases of inbuilt tools in CrewAI
 
 - Learn to build a parallel multi-agent system with CrewAI.
 - Understand how to run agents in `parallel`.
-- Learn to create and use `custom tools` in CrewAI.
+- Learn to create and **use** `custom tools` **in Crew**AI.
 
 **Examples Set**:
 
