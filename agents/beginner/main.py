@@ -8,13 +8,14 @@ from tasks import hate_speech_detection_task
 # Define the Crew with agents and tasks
 crew = Crew(
     agents=[hate_speech_detector],
-    tasks=[hate_speech_detection_task]
+    tasks=[hate_speech_detection_task],
+    verbose=False,
     )
 
 # Kickoff the Crew with the input query
-Text = "Public libraries are important resources for everyone in the city."
+# Text = "Public libraries are important resources for everyone in the city."
 # Text = "That country is less intelligent and incapable of contributing to society."
-# Text = "People from that race are all untrustworthy and should not be allowed to work in public jobs."
+Text = "People from that race are all untrustworthy and should not be allowed to work in public jobs."
 
 result = crew.kickoff(inputs={"text": Text})
 
