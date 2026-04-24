@@ -65,22 +65,14 @@ def get_company_info(symbol: str):
             "Market Cap": f"{company_info_full.get('marketCap', company_info_full.get('enterpriseValue'))} {company_info_full.get('currency', 'USD')}",
             "Sector": company_info_full.get("sector"),
             "Industry": company_info_full.get("industry"),
-            "City": company_info_full.get("city"),
             "Country": company_info_full.get("country"),
             "EPS": company_info_full.get("trailingEps"),
             "P/E Ratio": company_info_full.get("trailingPE"),
             "52 Week Low": company_info_full.get("fiftyTwoWeekLow"),
             "52 Week High": company_info_full.get("fiftyTwoWeekHigh"),
-            "50 Day Average": company_info_full.get("fiftyDayAverage"),
-            "200 Day Average": company_info_full.get("twoHundredDayAverage"),
-            "Employees": company_info_full.get("fullTimeEmployees"),
-            "Total Cash": company_info_full.get("totalCash"),
-            "Free Cash flow": company_info_full.get("freeCashflow"),
-            "Operating Cash flow": company_info_full.get("operatingCashflow"),
-            "EBITDA": company_info_full.get("ebitda"),
             "Revenue Growth": company_info_full.get("revenueGrowth"),
             "Gross Margins": company_info_full.get("grossMargins"),
-            "Ebitda Margins": company_info_full.get("ebitdaMargins"),
+            "EBITDA": company_info_full.get("ebitda"),
         }
         return json.dumps(company_info_cleaned)
     except Exception as e:
@@ -104,7 +96,4 @@ def get_income_statements(symbol: str):
     except Exception as e:
         return f"Error fetching income statements for {symbol}: {e}"
 
-# {toolname: get_current_stock_price, tooldescription: Use this function to get the current stock price for a given symbol. parameters: symbol (str): The stock symbol. returns: str: The current stock price or error message.}
-# {toolname: get_company_info, tooldescription: Use this function to get company information and current financial snapshot for a given stock symbol. parameters: symbol (str): The stock symbol. returns: JSON containing company profile and current financial snapshot.}
-# {toolname: get_income_statements, tooldescription: Use this function to get income statements for a given stock symbol. parameters: symbol (str): The stock symbol. returns: JSON containing income statements or an empty dictionary.}
 
