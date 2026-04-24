@@ -10,10 +10,6 @@ from main import (
     analysis_crew,
     financial_crew,
     news_crew,
-    run_crew_task,
-    run_parallel_execution,
-    run_sequential_execution,
-    sequential_crew,
 )
 
 # FastAPI app initialization
@@ -36,7 +32,6 @@ app.add_middleware(
 # Pydantic models for request/response
 class AnalysisRequest(BaseModel):
     stock: str
-    execution_mode: str = "parallel"  # "parallel" or "sequential"
 
 
 class AnalysisResponse(BaseModel):
@@ -61,6 +56,28 @@ class TaskStatus(BaseModel):
 task_results = {}
 
 
+def run_parallel_execution(stock_input):
+    """Run financial and news gathering in parallel, then analysis sequentially."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    def run_crew(crew, inputs):
+        return crew.kickoff(inputs=inputs)
+
+    parallel_start = time.time()
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        financial_future = executor.submit(run_crew, financial_crew, stock_input)
+        news_future = executor.submit(run_crew, news_crew, stock_input)
+        financial_future.result()
+        news_future.result()
+    parallel_time = time.time() - parallel_start
+
+    analysis_start = time.time()
+    analysis_crew.kickoff(inputs=stock_input)
+    analysis_time = time.time() - analysis_start
+
+    return parallel_time, analysis_time
+
+
 async def run_analysis_background(task_id: str, stock: str, execution_mode: str):
     """Background task to run the analysis."""
     start_time = time.time()
@@ -73,37 +90,23 @@ async def run_analysis_background(task_id: str, stock: str, execution_mode: str)
         "execution_mode": execution_mode,
     }
 
-    if execution_mode == "parallel":
-        parallel_time, analysis_time = run_parallel_execution(stock_input)
+    parallel_time, analysis_time = run_parallel_execution(stock_input)
 
-        end_time = time.time()
-        execution_time = end_time - start_time
+    end_time = time.time()
+    execution_time = end_time - start_time
 
-        # Calculate time savings
-        estimated_sequential_time = parallel_time * 2 + analysis_time
-        time_saved = estimated_sequential_time - execution_time
+    estimated_sequential_time = parallel_time * 2 + analysis_time
+    time_saved = estimated_sequential_time - execution_time
 
-        task_results[task_id] = {
-            "status": "completed",
-            "execution_time": execution_time,
-            "parallel_time": parallel_time,
-            "analysis_time": analysis_time,
-            "time_saved": time_saved,
-            "stock": stock,
-            "execution_mode": execution_mode,
-        }
-    else:
-        sequential_time, _ = run_sequential_execution(stock_input)
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        task_results[task_id] = {
-            "status": "completed",
-            "execution_time": execution_time,
-            "stock": stock,
-            "execution_mode": execution_mode,
-        }
+    task_results[task_id] = {
+        "status": "completed",
+        "execution_time": execution_time,
+        "parallel_time": parallel_time,
+        "analysis_time": analysis_time,
+        "time_saved": time_saved,
+        "stock": stock,
+        "execution_mode": execution_mode,
+    }
 
 
 @app.get("/")
@@ -188,35 +191,22 @@ async def analyze_sync(request: AnalysisRequest):
     start_time = time.time()
     stock_input = {"stock": request.stock}
 
-    if request.execution_mode == "parallel":
-        parallel_time, analysis_time = run_parallel_execution(stock_input)
+    parallel_time, analysis_time = run_parallel_execution(stock_input)
 
-        end_time = time.time()
-        execution_time = end_time - start_time
+    end_time = time.time()
+    execution_time = end_time - start_time
 
-        # Calculate time savings
-        estimated_sequential_time = parallel_time * 2 + analysis_time
-        time_saved = estimated_sequential_time - execution_time
+    estimated_sequential_time = parallel_time * 2 + analysis_time
+    time_saved = estimated_sequential_time - execution_time
 
-        return AnalysisResponse(
-            status="completed",
-            message=f"Analysis completed for {request.stock}",
-            execution_time=execution_time,
-            parallel_time=parallel_time,
-            analysis_time=analysis_time,
-            time_saved=time_saved,
-        )
-    else:
-        sequential_time, _ = run_sequential_execution(stock_input)
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        return AnalysisResponse(
-            status="completed",
-            message=f"Analysis completed for {request.stock}",
-            execution_time=execution_time,
-        )
+    return AnalysisResponse(
+        status="completed",
+        message=f"Analysis completed for {request.stock}",
+        execution_time=execution_time,
+        parallel_time=parallel_time,
+        analysis_time=analysis_time,
+        time_saved=time_saved,
+    )
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ def check_requirements():
 
 def check_env_vars():
     """Check if required environment variables are set."""
-    required_vars = ["OPENAI_API_KEY", "EXA_API_KEY"]
+    required_vars = ["OPENROUTER_API_KEY", "EXA_API_KEY"]
     missing_vars = []
 
     for var in required_vars:
@@ -72,7 +72,7 @@ def main():
     # Check if we're in the right directory
     if not Path("api_server.py").exists():
         print(
-            "❌ api_server.py not found. Please run this script from the agents/advanced directory"
+            "❌ api_server.py not found. Please run this script from the agents/advanced/v2 directory"
         )
         sys.exit(1)
 
@@ -83,7 +83,7 @@ def main():
     # Check environment variables
     if not check_env_vars():
         print("\n💡 Tip: Create a .env file with your API keys:")
-        print("OPENAI_API_KEY=your_openai_key_here")
+        print("OPENROUTER_API_KEY=your_openrouter_key_here")
         print("EXA_API_KEY=your_exa_key_here")
         sys.exit(1)
 
